@@ -31,4 +31,4 @@ def export_to_github_env(exp_path):
     elif detect_os() == "unix" or detect_os() == "macos":
         path_seprator = ":"
     
-    command(f"echo {exp_path} >> $GITHUB_PATH")
+    command(f"echo '{exp_path}' >> $GITHUB_PATH")
