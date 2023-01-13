@@ -40,29 +40,7 @@ def get_url( _version : str ) -> str:
     return url
 
 
-from tqdm import tqdm
-from urllib.parse import urlsplit
 
-def download( url : str, _out_name : str ="" ) -> str:
-    if(not _out_name):
-        path = urlsplit(url).path
-        _out_name = path_basename(path)
-        
-    response = requests.get(url, stream=True)
-
-    total_size = int(response.headers.get("content-length", 0))
-    block_size = 1024  # 1 Kibibyte
-
-    #print("Downloading Ninja ...")
-
-
-    with open(_out_name, "wb") as f:
-        for data in tqdm(response.iter_content(block_size), total=total_size // block_size, unit='KB', unit_scale=True):
-            f.write(data)
-
-    #print("Download complete!")
-    
-    return abspath(_out_name)
 
 
 if __name__ == "__main__":
