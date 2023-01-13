@@ -25,6 +25,7 @@ def parse_cmd_args() -> Namespace:
 
 
 def get_url(_version) -> str:
+    _os = detect_os()
     if(_os == "windows"):
         cmake_suffix = "windows-x86_64.zip"
         cmake_dir = "cmake-${_version}-windows-x86_64/bin"
