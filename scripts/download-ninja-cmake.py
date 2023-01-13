@@ -2,9 +2,11 @@ import subprocess
 from os import environ, path
 
 from detect_os import detect_os
-from setup_cmake import get_url, download
+from setup_cmake import get_url as get_cmake_url
+from setup_ninja import get_url as get_ninja_url
 from extract_arcv import extract_here
 from github_env import GITHUB_WORKSPACE, GITHUB_PATH, export_to_github_env
+from download import download
 
 CMAKE_VERSION = environ.get('CMAKE_VERSION')
 NINJA_VERSION = environ.get('NINJA_VERSION')
@@ -16,7 +18,7 @@ print("Enviroment: ")
 subprocess.run(["env"])
 
 print(f"Downloading CMake v{CMAKE_VERSION}")
-url = get_url(CMAKE_VERSION)
+url = get_cmake_url(CMAKE_VERSION)
 print(f"CMake Download URL: {url}")
 cmake_out_arcv = download(url)
 print(f"Downloaded: {cmake_out_arcv}")
@@ -35,7 +37,7 @@ export_to_github_env(cmake_dir)
 # -------------------
 
 print(f"Downloading Ninja v{NINJA_VERSION}")
-ninja_url = get_url(NINJA_VERSION)
+ninja_url = get_ninja_url(NINJA_VERSION)
 print(f"Ninja Download URL: {ninja_url}")
 ninja_out_arcv = download(ninja_url)
 print(f"Downloaded: {ninja_out_arcv}")
