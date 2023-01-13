@@ -1,17 +1,16 @@
-name: Build Docs
+name: Upload Artifacts
 
 on:
-  workflow_run:
-    workflows: ["Build Matrix"]
-    branches: [main]
-    types: 
-      - completed
+  push:
+    branches: 
+      - 'release/**'
+    tags:
+      - v*
 
-env:
-DOXYGEN_VERSION: 1.9.6
 
 jobs:
   upload_artifact:
+    if: contains(github.ref, 'tags/v')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
