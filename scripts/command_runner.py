@@ -1,6 +1,6 @@
 import subprocess
 from argparse import ArgumentParser, Namespace
-
+import subprocess
 
 def parse_cmd_args() -> Namespace:
     # Create an ArgumentParser object
@@ -16,10 +16,9 @@ def parse_cmd_args() -> Namespace:
 
 def command( cmd : str ):
     # Split the command string into a list of arguments
-    args = cmd.split()
     try:
         # Run the command and capture the output
-        output = subprocess.run(args, capture_output=True, check=True)
+        output = subprocess.run(cmd, capture_output=True, check=True, shell=True)
         # Print the output
         print(output.stdout.decode())
     except subprocess.CalledProcessError as e:
