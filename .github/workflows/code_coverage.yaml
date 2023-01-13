@@ -12,7 +12,6 @@ jobs:
     name: checking coverage
     runs-on: ubuntu-latest
     steps:
-      steps:
-        - name: setting up
-          run:  |
-            echo "Checking coverage ..."
+      - name: setting up
+        run:  |
+          echo "Checking coverage ..."
