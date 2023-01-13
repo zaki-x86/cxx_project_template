@@ -58,16 +58,22 @@ def extract(arcv_name, dest_dir=".") -> str:
     subprocess.run(["tar", "-xzvf", arcv_name, "-C", dest_dir])
 
 if __name__ == "__main__":
-    args = parse_cmd_args()
+    
     _os = detect_os()
+    args = parse_cmd_args()
     _version = args.version
-    _out_name = args.out_name    
+    _out_name = args.out_name 
+    print(f"Downloading version {_version} on {_os}")
     
     url = get_url(_version)
+    print(f"Download url: {url}")
     
     # Usually when you download from a url, such as: "https://website.come/downloads/releases/softwarev1.0"
     # The downloaded archive has the basename of the url, which is: "softwarev1.0"
     # Function download, returns the basename of the url 
     out_arcv = download(url)
+    print(f"Downloaded file: {out_arcv}")
+    
     out_arcv = extract(out_arcv)
+    print(f"Path to output archive: {out_arcv}")
     

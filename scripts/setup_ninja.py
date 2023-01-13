@@ -35,7 +35,7 @@ def get_url( _version : str ) -> str:
     else:
         exit(1)
         
-    url = f"https://github.com/ninja-build/ninja/releases/download/v${_version}/ninja-${ninja_suffix}"
+    url = f"https://github.com/ninja-build/ninja/releases/download/v{_version}/ninja-{ninja_suffix}"
     
     return url
 
@@ -64,7 +64,7 @@ def download( url : str, _out_name : str ="" ) -> str:
     
     return abspath(_out_name)
 
-def extract( arcv_path : str, dest_path : str ) -> str:
+def extract( arcv_path : str, dest_path : str ="." ) -> str:
     completed = execute_process(["tar", "xvf", arcv_path, -"C", abspath(dest_path)])
     if completed.returncode == 0:
         print("Done")
