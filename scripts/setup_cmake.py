@@ -1,16 +1,15 @@
 # Needs: os, version, out_name
 
 import sys
-import os
 import requests
-from tqdm import tqdm
-import subprocess
-from argparse import ArgumentParser, Namespace
+from os.path import abspath
+from os.path import basename as path_basename
+from subprocess import run as execute_process
 from detect_os import detect_os
-import urllib.parse
-import tarfile
+from detect_os import detect_os
 
 
+from argparse import ArgumentParser, Namespace
 def parse_cmd_args() -> Namespace:
     # Create an ArgumentParser object
     parser = ArgumentParser(description='Setup CMake')
@@ -38,6 +37,8 @@ def get_url(_version) -> str:
 
     return f"https://github.com/Kitware/CMake/releases/download/v{_version}/cmake-{_version}-{cmake_suffix}"
 
+from tqdm import tqdm
+from urllib.parse import urlsplit
 def download(url, _out_name="") -> str:
     if(not _out_name):
         path = urllib.parse.urlsplit(url).path
@@ -54,8 +55,11 @@ def download(url, _out_name="") -> str:
     print("Download complete!")
     return _out_name
     
-def extract(arcv_name, dest_dir=".") -> str:
-    subprocess.run(["tar", "-xzvf", arcv_name, "-C", dest_dir])
+def extract( arcv_path : str, dest_path : str ="." ) -> str:
+    completed = execute_process(["tar", "xvf", arcv_path, "-C", abspath(dest_path)])
+    if completed.returncode == 0:
+        print("Done")
+    return abspath(dest_path)
 
 if __name__ == "__main__":
     

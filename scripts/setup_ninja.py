@@ -5,7 +5,7 @@ import requests
 from os.path import abspath
 from os.path import basename as path_basename
 from subprocess import run as execute_process
-
+from detect_os import detect_os
 
 from argparse import ArgumentParser, Namespace
 def parse_cmd_args() -> Namespace:
@@ -22,7 +22,6 @@ def parse_cmd_args() -> Namespace:
     return args
 
 
-from detect_os import detect_os
 
 def get_url( _version : str ) -> str:
     _os = detect_os()
@@ -65,7 +64,7 @@ def download( url : str, _out_name : str ="" ) -> str:
     return abspath(_out_name)
 
 def extract( arcv_path : str, dest_path : str ="." ) -> str:
-    completed = execute_process(["tar", "xvf", arcv_path, -"C", abspath(dest_path)])
+    completed = execute_process(["tar", "xvf", arcv_path, "-C", abspath(dest_path)])
     if completed.returncode == 0:
         print("Done")
     return abspath(dest_path)
