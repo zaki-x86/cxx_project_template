@@ -88,7 +88,7 @@ jobs:
       id: install-packages
       run: |
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        pip install urllib3 requests tqdm
+        pip install urllib3 requests tqdm tarfile
     
     # download ninja and cmake
     - name: Download Ninja and CMake
@@ -96,11 +96,11 @@ jobs:
       run:  |
         echo "Detected OS: $(python scripts/detect_os.py)"
 
-        echo "Downloads and extracts cmake based on the supplied version"
-        python scripts/setup_cmake.py --version $CMAKE_VERSION
+        echo "Downloading cmake based on the supplied version"
+        python scripts/setup_cmake.py --version $CMAKE_VERSION | python script/extract_arcv.py
 
-        echo "Downloads and extracts ninja based on the supplied version"
-        python scripts/setup_ninja.py --version $NINJA_VERSION
+        echo "Downloading ninja based on the supplied version"
+        python scripts/setup_ninja.py --version $NINJA_VERSION | python script/extract_arcv.py
 
         echo "Current directory: "
         ls
