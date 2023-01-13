@@ -1,6 +1,6 @@
 import os
 from detect_os import detect_os
-from command_runner import command
+import subprocess
 
 GITHUB_WORKSPACE = os.environ.get('GITHUB_WORKSPACE')    # path to repo
 GITHUB_PATH = os.environ.get('GITHUB_PATH')      # env path
@@ -31,4 +31,4 @@ def export_to_github_env(exp_path):
     elif detect_os() == "unix" or detect_os() == "macos":
         path_seprator = ":"
     
-    command(f"echo \"{exp_path}\" >> $GITHUB_PATH")
+    subprocess.run(["echo", f"\"{exp_path}\"", ">>", "$GITHUB_PATH"])
