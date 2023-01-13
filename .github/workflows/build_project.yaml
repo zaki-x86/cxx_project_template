@@ -87,7 +87,7 @@ jobs:
     - name: Install pip packages
       id: install-packages
       run: |
-        pip install -r requirements.txt; fi
+        pip install -r requirements.txt
     
     # download ninja and cmake
     - name: Download Ninja and CMake
