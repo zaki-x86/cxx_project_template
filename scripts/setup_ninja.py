@@ -40,7 +40,7 @@ def get_url( _version : str ) -> str:
 
 
 from tqdm import tqdm
-from urllib3 import urlsplit
+from urllib.parse import urlsplit
 
 def download( url : str, _out_name : str ="" ) -> str:
     if(not _out_name):
