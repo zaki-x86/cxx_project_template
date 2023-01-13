@@ -42,7 +42,7 @@ cmake_dir = path.join(GITHUB_WORKSPACE, cmake_dir)
 export_to_github_env(cmake_dir)
 
 if RUNNING_OS != "windows":
-    command(f"chmod +x ${cmake_dir}/cmake")
+    command(f"chmod +x {cmake_dir}/cmake")
 
 print("Testing CMake installation: ")
 command("cmake --version")
@@ -63,7 +63,7 @@ ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
 # todo: edit cmake_dir to be path to binary
 export_to_github_env(ninja_dir)
 if RUNNING_OS != "windows":
-    command(f"chmod +x ${ninja_dir}/ninja")
+    command(f"chmod +x {ninja_dir}/ninja")
     
 print("Testing Ninja installation: ")
 command("ninja --version")
