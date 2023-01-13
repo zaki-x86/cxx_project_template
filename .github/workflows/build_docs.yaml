@@ -1,0 +1,19 @@
+name: Build Docs
+
+on:
+  workflow_run:
+    workflows: ["Build Matrix"]
+    branches: [main]
+    types: 
+      - completed
+
+env:
+DOXYGEN_VERSION: 1.9.6
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: |
+      echo "Building docs"

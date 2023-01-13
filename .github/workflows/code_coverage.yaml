@@ -1,0 +1,17 @@
+name: Code Coverage
+
+on:
+  workflow_run:
+    workflows: ["Test Matrix"]
+    branches: [main]
+    types: 
+      - completed
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: coverage
+      steps:
+        - run:
+          echo "Checking coverage ..."

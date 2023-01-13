@@ -1,0 +1,48 @@
+name: Build Docs
+
+on:
+  workflow_run:
+    workflows: ["Build Matrix"]
+    branches: [main]
+    types: 
+      - completed
+
+env:
+DOXYGEN_VERSION: 1.9.6
+
+jobs:
+  upload_artifact:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Windows Latest MSVC", artifact: "Windows-MSVC.7z",
+            os: ubuntu-latest
+          }
+        - {
+            name: "Windows Latest MinGW", artifact: "Windows-MinGW.7z",
+            os: ubuntu-latest
+          }
+        - {
+            name: "Ubuntu Latest GCC", artifact: "Linux.7z",
+            os: ubuntu-latest
+          }
+        - {
+            name: "macOS Latest Clang", artifact: "macOS.7z",
+            os: ubuntu-latest
+          }    
+    steps:
+    
+    - name: install
+      run: | 
+        echo "Building docs"
+
+    - name: pack
+      run: |
+        echo "packing"
+
+    - name: upload
+      run:  |
+        echo "uploading artifact"

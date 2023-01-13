@@ -87,4 +87,6 @@ jobs:
     - name: Download Ninja and CMake
       shell:
       run:  |
+        echo "Downloading Ninja"
+        echo "Download CMake"
         python .github/detect_os.py
