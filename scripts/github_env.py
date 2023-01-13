@@ -7,5 +7,5 @@ GITHUB_PATH = os.environ.get('GITHUB_PATH')
 def export_to_github_env(path):
     if detect_os() == "windows":
         path_seprator = ";"
-    elif detect_os() == "unix" | detect_os() == "macos":
+    elif detect_os() == "unix" or detect_os() == "macos":
         path_seprator = ":"
