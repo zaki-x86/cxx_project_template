@@ -1,0 +1,3 @@
+class CMake:
+    pass
+

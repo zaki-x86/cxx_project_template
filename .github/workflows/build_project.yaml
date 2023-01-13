@@ -1,0 +1,90 @@
+name: Build Matrix
+
+####
+# triggers for workflow
+####
+on: [push, pull_request, workflow_dispatch]
+
+###
+# preset enviroment variables
+###
+env:
+  CMAKE_VERSION: 3.24.3
+  NINJA_VERSION: 1.11.1
+  BUILD_TYPE: Release
+  CCACHE_VERSION: 4.7.3
+
+###
+# Jobs: filter_path, build
+###
+
+###
+jobs:
+  ###
+  # paths-filter: 
+    ## Track any changes in the specified directories and outputs `exec_build` 
+    ## if `exec_build` is true, then build job is launched.
+  ###
+  paths-filter:
+    runs-on: ubuntu-latest
+    outputs:
+      exec_build: ${{ steps.filter.outputs.workflows }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          workflows:
+            - '.github/workflows/build_project.yaml'
+            - 'CMakeLists.txt'
+            - 'Doxyfile'
+            - '.gitignore'
+            - 'include/**'
+            - 'src/**'
+            - 'test/**'
+            - 'scripts/**'
+            - 'examples/**'
+            - 'utils/**'
+            - 'libs/'
+
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    needs: paths_filter
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Windows Latest MSVC", artifact: "Windows-MSVC.7z",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+          }
+        - {
+            name: "Ubuntu Latest GCC", artifact: "Linux.7z",
+            os: ubuntu-latest,
+            cc: "gcc", cxx: "g++"
+          }
+        - {
+            name: "macOS Latest Clang", artifact: "macOS.7z",
+            os: macos-latest,
+            cc: "clang", cxx: "clang++"
+          }
+    if: needs.paths-filter.outputs.exec_build == 'true'
+    steps:
+    # checkout the repo into the workspace
+    - uses: actions/checkout@v3
+
+    # setup python for scripting
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.8
+
+    # download ninja and cmake
+    - name: Download Ninja and CMake
+      shell:
+      run:  |
+        python .github/detect_os.py
