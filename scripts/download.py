@@ -3,10 +3,23 @@ from os import path
 from tqdm import tqdm
 from urllib.parse import urlsplit
 
+from argparse import ArgumentParser, Namespace
+
+def parse_cmd_args() -> Namespace:
+    # Create an ArgumentParser object
+    parser = ArgumentParser(description='Setup CMake')
+
+    # Add arguments to the parser
+    parser.add_argument('--url', type=str, help='File url to download', required=True)
+
+    # Parse the command-line arguments
+    args = parser.parse_args()
+    return args
+
 def download( url : str, _out_name : str ="" ) -> str:
     if(not _out_name):
-        path = urlsplit(url).path
-        _out_name = path.basename(path)
+        _path = urlsplit(url).path
+        _out_name = path.basename(_path)
         
     response = requests.get(url, stream=True)
 
@@ -18,3 +31,7 @@ def download( url : str, _out_name : str ="" ) -> str:
             f.write(data)
     
     return path.abspath(_out_name)
+
+if __name__ == "__main__":
+    args = parse_cmd_args()
+    download(args.url)
