@@ -8,8 +8,7 @@ def detect_os():
     elif sys.platform.startswith('darwin'):
         return "macos"
     else:
-        return "null" 
+        return 
 
-os = {"os" : detect_os()}
-
-print(os)
+if __name__ == "__main__":
+    print(detect_os())
