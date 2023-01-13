@@ -97,10 +97,10 @@ jobs:
         echo "Detected OS: $(python scripts/detect_os.py)"
 
         echo "Downloading cmake based on the supplied version"
-        python scripts/setup_cmake.py --version $CMAKE_VERSION | python script/extract_arcv.py
+        python scripts/setup_cmake.py --version $CMAKE_VERSION | python scripts/extract_arcv.py
 
         echo "Downloading ninja based on the supplied version"
-        python scripts/setup_ninja.py --version $NINJA_VERSION | python script/extract_arcv.py
+        python scripts/setup_ninja.py --version $NINJA_VERSION | python scripts/extract_arcv.py
 
         echo "Current directory: "
         ls
