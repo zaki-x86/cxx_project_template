@@ -30,4 +30,5 @@ def export_to_github_env(exp_path):
     elif detect_os() == "unix" or detect_os() == "macos":
         path_seprator = ":"
     
-    os.environ['GITHUB_PATH'] = GITHUB_PATH + path_seprator + exp_path
+    with open(os.environ['GITHUB_PATH'], 'a') as f:
+        f.writelines(exp_path)

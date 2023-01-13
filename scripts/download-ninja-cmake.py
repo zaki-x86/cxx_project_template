@@ -63,14 +63,9 @@ ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
 export_to_github_env(ninja_dir)
 
 print(f"Ninja directory: {ninja_dir}")
-command(f"cat {GITHUB_PATH}")
 
-#if RUNNING_OS != "windows":
-#    command(f"chmod +x {ninja_dir}/ninja")
-    
-#print("Testing Ninja installation: ")
-#command("ninja --version")
-
-if RUNNING_OS == "unix":
-    command("sudo apt install tree")
-    command("tree -L 3")
+if RUNNING_OS != "windows":
+    command(f"chmod +x {ninja_dir}/ninja")
+   
+print("Testing Ninja installation: ")
+command("ninja --version")
