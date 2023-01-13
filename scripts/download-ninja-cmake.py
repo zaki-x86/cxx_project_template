@@ -58,13 +58,16 @@ print(f"Extracting {ninja_out_arcv}: ")
 ninja_dir = extract_here(ninja_out_arcv)
 print(f"Extracted: {ninja_dir}")
 
-subprocess.run(["ls", f"{ninja_dir}"])
 ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
 # todo: edit cmake_dir to be path to binary
 export_to_github_env(ninja_dir)
-if RUNNING_OS != "windows":
-    command(f"chmod +x {ninja_dir}/ninja")
+
+#if RUNNING_OS != "windows":
+#    command(f"chmod +x {ninja_dir}/ninja")
     
 print("Testing Ninja installation: ")
 command("ninja --version")
 
+if RUNNING_OS == "unix":
+    command("sudo apt install tree")
+    command("tree -L 3")
