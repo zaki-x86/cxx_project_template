@@ -39,10 +39,11 @@ def get_url(_version) -> str:
 
 from tqdm import tqdm
 from urllib.parse import urlsplit
+
 def download(url, _out_name="") -> str:
     if(not _out_name):
-        path = urllib.parse.urlsplit(url).path
-        _out_name = os.path.basename(path)
+        path = urlsplit(url).path
+        _out_name = path_basename(path)
     
     response = requests.get(url, stream=True)
     
