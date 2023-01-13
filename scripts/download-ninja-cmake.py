@@ -32,11 +32,11 @@ command(f"ls {cmake_dir}")
 
 print("Exporting CMake path: ")
 if RUNNING_OS == "windows":
-    cmake_dir = f"cmake-{CMAKE_VERSION}-windows-x86_64/bin"
+    cmake_dir = f"cmake-{CMAKE_VERSION}-windows-x86_64/ cmake-{CMAKE_VERSION}-windows-x86_64/bin"
 elif RUNNING_OS == "unix":
-    cmake_dir = f"cmake-{CMAKE_VERSION}-linux-x86_64/bin"
+    cmake_dir = f"cmake-{CMAKE_VERSION}-linux-x86_64/cmake-{CMAKE_VERSION}-linux-x86_64/bin"
 elif RUNNING_OS == "macos":
-    cmake_dir = f"cmake-{CMAKE_VERSION}-macos-universal/CMake.app/Contents/bin"
+    cmake_dir = f"cmake-{CMAKE_VERSION}-macos-universal/cmake-{CMAKE_VERSION}-macos-universal/CMake.app/Contents/bin"
     
 cmake_dir = path.join(GITHUB_WORKSPACE, cmake_dir)
 export_to_github_env(cmake_dir)
@@ -57,16 +57,16 @@ print(f"Downloaded: {ninja_out_arcv}")
 print(f"Extracting {ninja_out_arcv}: ")
 ninja_dir = extract_here(ninja_out_arcv)
 print(f"Extracted: {ninja_dir}")
-
+    
 ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
 # todo: edit cmake_dir to be path to binary
 export_to_github_env(ninja_dir)
 
-#if RUNNING_OS != "windows":
-#    command(f"chmod +x {ninja_dir}/ninja")
+if RUNNING_OS != "windows":
+    command(f"chmod +x {ninja_dir}/ninja")
     
-#print("Testing Ninja installation: ")
-#command("ninja --version")
+print("Testing Ninja installation: ")
+command("ninja --version")
 
 if RUNNING_OS == "unix":
     command("sudo apt install tree")
