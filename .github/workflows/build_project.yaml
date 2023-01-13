@@ -87,8 +87,7 @@ jobs:
     - name: Install pip packages
       id: install-packages
       run: |
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        pip install requests tqdm
+        pip install -r requirements.txt; fi
     
     # download ninja and cmake
     - name: Download Ninja and CMake
@@ -102,6 +101,8 @@ jobs:
         echo "Downloading ninja based on the supplied version"
         python scripts/setup_ninja.py --version $NINJA_VERSION | python scripts/extract_arcv.py
 
-        echo "Current directory: "
-        ls
+        echo "Current directory in ninja: "
+        ls ninja-linux
+        echo "Current directory in cmake: "
+        ls cmake-3.24.3-linux-x86_64
         
