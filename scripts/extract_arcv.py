@@ -34,19 +34,20 @@ def extract_here( arcv_path : str ) -> str:
     
     if fname.endswith("tar.gz"):
         dir_name = abspath(fname.replace(f"{os_extsep}tar.gz", ""))
-        mkdir(join_path(dest_path, dir_name))
-        dest_path = abspath(dir_name)
+
     elif fname.endswith("tar"):
         dir_name = abspath(fname.replace(f"{os_extsep}tar", ""))
-        mkdir(join_path(dest_path, dir_name))
-        dest_path = abspath(dir_name)
     elif fname.endswith("zip"):
         dir_name = abspath(fname.replace(f"{os_extsep}zip", ""))
-        mkdir(join_path(dest_path, dir_name))
-        dest_path = abspath(dir_name)
     else:
         return None
     
+    try:
+        mkdir(join_path(dest_path, dir_name))
+        dest_path = abspath(dir_name)
+    except FileExistsError:
+        print("Invalid, file already exists", file=sys.stderr)
+        exit(1)
     
     if fname.endswith("tar.gz"):
         tar = tar_open(fname, "r:gz")
@@ -105,11 +106,12 @@ if __name__ == "__main__":
         try:
             in_arcv = input()
             signal.alarm(0)
-            print(f"Received archive name: {in_arcv}")
+            #print(f"Received archive name: {in_arcv}")
             if(args.dest_path):
                 out = exteract_to(in_arcv, args.dest_path)
             else:
                 out = extract_here(in_arcv)
+            print(out, file=sys.stdout)
             exit(0)
         except TimeoutError:
             print("Input timeout, Exiting", file=sys.stderr)
