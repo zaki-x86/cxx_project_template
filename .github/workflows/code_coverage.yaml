@@ -9,10 +9,10 @@ on:
 
 jobs:
   check:
+    name: checking coverage
     runs-on: ubuntu-latest
     steps:
-    - name: coverage
       steps:
         - name: setting up
-          run:
+          run:  |
             echo "Checking coverage ..."

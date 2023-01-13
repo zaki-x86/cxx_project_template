@@ -51,7 +51,7 @@ jobs:
   build:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
-    needs: paths_filter
+    needs: paths-filter
     strategy:
       fail-fast: false
       matrix:
