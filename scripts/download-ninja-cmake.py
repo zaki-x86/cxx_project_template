@@ -32,10 +32,12 @@ cmake_dir = path.join(GITHUB_WORKSPACE, cmake_dir)
 # todo: edit cmake_dir to be path to binary
 export_to_github_env(cmake_dir)
 
+# -------------------
+
 print(f"Downloading Ninja v{NINJA_VERSION}")
-url = get_url(NINJA_VERSION)
-print(f"Ninja Download URL: {url}")
-ninja_out_arcv = download(url)
+ninja_url = get_url(NINJA_VERSION)
+print(f"Ninja Download URL: {ninja_url}")
+ninja_out_arcv = download(ninja_url)
 print(f"Downloaded: {ninja_out_arcv}")
 
 print(f"Extracting {ninja_out_arcv}: ")
@@ -43,6 +45,8 @@ ninja_dir = extract_here(ninja_out_arcv)
 print(f"Extracted: {ninja_dir}")
 
 subprocess.run(["ls", f"{ninja_dir}"])
-
+ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
+# todo: edit cmake_dir to be path to binary
+export_to_github_env(ninja_dir)
 
 
