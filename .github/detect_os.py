@@ -10,6 +10,6 @@ def detect_os():
     else:
         return "null" 
 
-os = {"os", detect_os()}
+os = {"os" : detect_os()}
 
 print(os)
