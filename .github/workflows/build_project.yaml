@@ -89,4 +89,4 @@ jobs:
       run:  |
         echo "Downloading Ninja"
         echo "Download CMake"
-        python .github/detect_os.py
+        python scripts/detect_os.py
