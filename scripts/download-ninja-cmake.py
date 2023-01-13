@@ -7,6 +7,7 @@ from setup_ninja import get_url as get_ninja_url
 from extract_arcv import extract_here
 from github_env import GITHUB_WORKSPACE, GITHUB_PATH, export_to_github_env
 from download import download
+from command_runner import command
 
 CMAKE_VERSION = environ.get('CMAKE_VERSION')
 NINJA_VERSION = environ.get('NINJA_VERSION')
@@ -27,13 +28,24 @@ print(f"Extracting {cmake_out_arcv}: ")
 cmake_dir = extract_here(cmake_out_arcv)
 print(f"Extracted: {cmake_dir}")
 
-subprocess.run(["ls", f"{cmake_dir}"])
+command(f"ls {cmake_dir}")
 
 print("Exporting CMake path: ")
+if RUNNING_OS == "windows":
+    cmake_dir = f"cmake-{CMAKE_VERSION}-windows-x86_64/bin"
+elif RUNNING_OS == "unix":
+    cmake_dir = f"cmake-{CMAKE_VERSION}-linux-x86_64/bin"
+elif RUNNING_OS == "macos":
+    cmake_dir = f"cmake-{CMAKE_VERSION}-macos-universal/CMake.app/Contents/bin"
+    
 cmake_dir = path.join(GITHUB_WORKSPACE, cmake_dir)
-# todo: edit cmake_dir to be path to binary
 export_to_github_env(cmake_dir)
 
+if RUNNING_OS != "windows":
+    command(f"chmod +x ${cmake_dir}/cmake")
+
+print("Testing if CMake is exported: ")
+command("cmake --version")
 # -------------------
 
 print(f"Downloading Ninja v{NINJA_VERSION}")
@@ -50,5 +62,9 @@ subprocess.run(["ls", f"{ninja_dir}"])
 ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
 # todo: edit cmake_dir to be path to binary
 export_to_github_env(ninja_dir)
-
+if RUNNING_OS != "windows":
+    command(f"chmod +x ninja")
+    
+print("Testing if Ninja is exported: ")
+command("ninja --version")
 
