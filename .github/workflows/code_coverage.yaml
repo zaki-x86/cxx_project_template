@@ -13,5 +13,6 @@ jobs:
     steps:
     - name: coverage
       steps:
-        - run:
-          echo "Checking coverage ..."
+        - name: setting up
+          run:
+            echo "Checking coverage ..."

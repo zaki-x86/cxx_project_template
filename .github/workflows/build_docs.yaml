@@ -12,8 +12,9 @@ DOXYGEN_VERSION: 1.9.6
 
 jobs:
   build:
+    name: build docs
     runs-on: ubuntu-latest
-
     steps:
-    - run: |
-      echo "Building docs"
+    - name: s1
+      run: |
+        echo "Building docs"

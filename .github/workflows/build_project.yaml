@@ -85,7 +85,7 @@ jobs:
 
     # download ninja and cmake
     - name: Download Ninja and CMake
-      shell:
+      shell: bash
       run:  |
         echo "Downloading Ninja"
         echo "Download CMake"
