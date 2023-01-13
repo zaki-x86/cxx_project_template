@@ -62,6 +62,8 @@ ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
 # todo: edit cmake_dir to be path to binary
 export_to_github_env(ninja_dir)
 
+print(f"Ninja directory: {ninja_dir}\nGITHUB_PATH: {GITHUB_PATH}")
+
 if RUNNING_OS != "windows":
     command(f"chmod +x {ninja_dir}/ninja")
     
