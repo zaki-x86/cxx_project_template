@@ -94,6 +94,7 @@ jobs:
       shell: bash
       run:  |
         python scripts/download-ninja-cmake.py
+        cat $GITHUB_PATH
          
 
 
