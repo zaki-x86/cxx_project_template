@@ -65,8 +65,8 @@ export_to_github_env(ninja_dir)
 #if RUNNING_OS != "windows":
 #    command(f"chmod +x {ninja_dir}/ninja")
     
-print("Testing Ninja installation: ")
-command("ninja --version")
+#print("Testing Ninja installation: ")
+#command("ninja --version")
 
 if RUNNING_OS == "unix":
     command("sudo apt install tree")
