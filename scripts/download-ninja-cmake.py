@@ -60,7 +60,7 @@ print(f"Extracted: {ninja_dir}")
     
 ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
 # todo: edit cmake_dir to be path to binary
-command(f"echo >> {ninja_dir}")
+export_to_github_env(ninja_dir)
 
 if RUNNING_OS != "windows":
     command(f"chmod +x {ninja_dir}/ninja")
