@@ -57,7 +57,7 @@ print(f"Extracted: {ninja_dir}")
 
 
 if RUNNING_OS != "windows":
-    command(f'echo "{ninja_dir}:{cmake_dir}" >> $GITHUB_PATH ')
+    command(f'echo "{ninja_dir}" >> $GITHUB_PATH ')
     command(f"chmod +x {ninja_dir}/ninja")
     command(f"chmod +x {cmake_dir}/cmake")
     
