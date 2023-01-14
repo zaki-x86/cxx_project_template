@@ -95,7 +95,7 @@ jobs:
       run:  |
         python scripts/download-ninja-cmake.py
         # For debugging
+        cat $GITHUB_PATH
         cmake --version
         ninja --version
-        cat $GITHUB_PATH
 
