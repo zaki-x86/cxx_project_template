@@ -22,7 +22,7 @@ env:
 jobs:
   ###
   # paths-filter: 
-    ## Track any changes in the specified directories and outputs `exec_build` 
+    ## Tracks any changes in the specified directories and outputs `exec_build` 
     ## if `exec_build` is true, then build job is launched.
   ###
   paths-filter:
@@ -94,8 +94,8 @@ jobs:
       shell: bash
       run:  |
         python scripts/download-ninja-cmake.py
-        cat $GITHUB_PATH
+        # For debugging
+        cmake --version
         ninja --version
-         
-
+        cat $GITHUB_PATH
 
