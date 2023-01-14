@@ -65,4 +65,4 @@ if RUNNING_OS != "windows":
     command(f"chmod +x {ninja_dir}/ninja")
    
 print("Testing Ninja installation: ")
-command("{ninja_dir}/ninja --version")
+command(f"{ninja_dir}/ninja --version")
