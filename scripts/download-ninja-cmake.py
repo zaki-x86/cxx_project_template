@@ -44,7 +44,6 @@ print(f"Extracting {cmake_out_arcv}: ")
 cmake_dir = extract_here(cmake_out_arcv)
 print(f"Extracted: {cmake_dir}")
 
-print("Exporting CMake path: ")
 if RUNNER_OS == "windows":
     cmake_dir = f"cmake-{CMAKE_VERSION}-windows-x86_64/ cmake-{CMAKE_VERSION}-windows-x86_64/bin"
 elif RUNNER_OS == "unix":
@@ -53,6 +52,7 @@ elif RUNNER_OS == "macos":
     cmake_dir = f"cmake-{CMAKE_VERSION}-macos-universal/cmake-{CMAKE_VERSION}-macos-universal/CMake.app/Contents/bin"
     
 cmake_dir = path.join(GITHUB_WORKSPACE, cmake_dir)
+print(f"{cmake_dir}")
 
 # -------------------
 
