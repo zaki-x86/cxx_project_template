@@ -59,11 +59,10 @@ ninja_dir = extract_here(ninja_out_arcv)
 print(f"Extracted: {ninja_dir}")
     
 ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
-# todo: edit cmake_dir to be path to binary
 export_to_github_env(ninja_dir)
 
 if RUNNING_OS != "windows":
     command(f"chmod +x {ninja_dir}/ninja")
    
 print("Testing Ninja installation: ")
-command("ninja --version")
+command("{ninja_dir}/ninja --version")
