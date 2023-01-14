@@ -41,11 +41,8 @@ elif RUNNING_OS == "macos":
 cmake_dir = path.join(GITHUB_WORKSPACE, cmake_dir)
 export_to_github_env(cmake_dir)
 
-if RUNNING_OS != "windows":
-    command(f"chmod +x {cmake_dir}/cmake")
 
-print("Testing CMake installation: ")
-command("cmake --version")
+
 # -------------------
 
 print(f"Downloading Ninja v{NINJA_VERSION}")
@@ -59,10 +56,16 @@ ninja_dir = extract_here(ninja_out_arcv)
 print(f"Extracted: {ninja_dir}")
     
 ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
-export_to_github_env(ninja_dir)
+
+
 
 if RUNNING_OS != "windows":
+    command(f'echo "{ninja_dir}:{cmake_dir}" >> $GITHUB_PATH ')
     command(f"chmod +x {ninja_dir}/ninja")
+    command(f"chmod +x {cmake_dir}/cmake")
+    
+print("Testing CMake installation: ")
+command("cmake --version")
    
 print("Testing Ninja installation: ")
 command(f"{ninja_dir}/ninja --version")
