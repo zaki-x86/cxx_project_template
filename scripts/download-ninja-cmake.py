@@ -28,8 +28,6 @@ print(f"Extracting {cmake_out_arcv}: ")
 cmake_dir = extract_here(cmake_out_arcv)
 print(f"Extracted: {cmake_dir}")
 
-command(f"ls {cmake_dir}")
-
 print("Exporting CMake path: ")
 if RUNNING_OS == "windows":
     cmake_dir = f"cmake-{CMAKE_VERSION}-windows-x86_64/ cmake-{CMAKE_VERSION}-windows-x86_64/bin"
@@ -51,13 +49,15 @@ print(f"Downloaded: {ninja_out_arcv}")
 print(f"Extracting {ninja_out_arcv}: ")
 ninja_dir = extract_here(ninja_out_arcv)
 print(f"Extracted: {ninja_dir}")
-    
+
+command(f"mv {ninja_dir}/ninja {GITHUB_WORKSPACE}")
+
 #ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
 
 
 
 if RUNNING_OS != "windows":
-    command(f'echo "{ninja_dir}" >> $GITHUB_PATH ')
+    command(f'echo "{GITHUB_WORKSPACE}:{cmake_dir}" >> $GITHUB_PATH ')
     command(f"chmod +x {ninja_dir}/ninja")
     command(f"chmod +x {cmake_dir}/cmake")
     
