@@ -39,9 +39,6 @@ elif RUNNING_OS == "macos":
     cmake_dir = f"cmake-{CMAKE_VERSION}-macos-universal/cmake-{CMAKE_VERSION}-macos-universal/CMake.app/Contents/bin"
     
 cmake_dir = path.join(GITHUB_WORKSPACE, cmake_dir)
-export_to_github_env(cmake_dir)
-
-
 
 # -------------------
 
@@ -55,7 +52,7 @@ print(f"Extracting {ninja_out_arcv}: ")
 ninja_dir = extract_here(ninja_out_arcv)
 print(f"Extracted: {ninja_dir}")
     
-ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
+#ninja_dir = path.join(GITHUB_WORKSPACE, ninja_dir)
 
 
 
