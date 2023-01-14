@@ -95,7 +95,7 @@ jobs:
       run:  |
         python scripts/download-ninja-cmake.py
         cat $GITHUB_PATH
-        ls ninja-linux
+        cat $PATH
         ninja --version
          
 
