@@ -94,6 +94,11 @@ jobs:
       shell: bash
       run:  |
         python scripts/download-ninja-cmake.py
+
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          echo "/home/runner/work/cxx_project_template/cxx_project_template/ninja-linux" >> $GITHUB_PATH 
+        elif [ "$RUNNER_OS" == "macOS" ]; then
+          echo "/Users/runner/work/cxx_project_template/cxx_project_template/ninja-mac" >> $GITHUB_PATH
         # For debugging
         cat $GITHUB_PATH
         cmake --version
