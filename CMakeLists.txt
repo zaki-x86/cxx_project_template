@@ -17,13 +17,37 @@ project(
 ##################################################################################
 ##################################################################################
 
+##
+## MAIN_PROJECT CHECK
+## determine if project is built as a subproject (using add_subdirectory) or if it is the main project
+##
+set(MAIN_PROJECT OFF)
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set(MAIN_PROJECT ON)
+endif()
+
+##################################################################################
+##################################################################################
+
+##
+## Setup the include path
+##
+##
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/scripts/cmake ${CMAKE_MODULE_PATH})
+
+##################################################################################
+##################################################################################
+
 #
 # Set project options
 #
 
-include(cmake/StandardSettings.cmake)
-include(cmake/StaticAnalyzers.cmake)
-include(cmake/Utils.cmake)
+include(StandardSettings)
+include(StaticAnalyzers)
+include(Utils)
+
+option(BuildTests "Build the unit tests when BUILD_TESTING is enabled." ${MAIN_PROJECT})
+option(CI         "Enable CI build targets." OFF)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
@@ -33,6 +57,11 @@ message(STATUS "Started CMake for ${PROJECT_NAME} v${PROJECT_VERSION}...\n")
 if (UNIX)
     add_compile_options("$<$<CONFIG:DEBUG>:-D_DEBUG>")    #this will allow to use same _DEBUG macro available in both Linux as well as Windows - MSCV environment. Easy to put Debug specific code.
 endif (UNIX)
+
+
+if (CI)
+    include(ci)
+endif ()
 
 ##################################################################################
 ##################################################################################
@@ -67,8 +96,8 @@ endif()
 # Enable package managers
 #
 
-include(cmake/Conan.cmake)
-include(cmake/Vcpkg.cmake)
+include(Conan)
+include(Vcpkg)
 
 ##################################################################################
 ##################################################################################
@@ -78,7 +107,7 @@ include(cmake/Vcpkg.cmake)
 #
 
 # Find all headers and implementation files
-include(cmake/SourcesAndHeaders.cmake)
+include(SourcesAndHeaders)
 
 if(${PROJECT_NAME}_BUILD_EXECUTABLE)
   add_executable(${PROJECT_NAME} ${exe_sources})
@@ -163,7 +192,7 @@ else()
     target_compile_features(${PROJECT_NAME}_LIB PUBLIC cxx_std_17)
   endif()
 endif()
-include(cmake/CompilerWarnings.cmake)
+include(CompilerWarnings)
 set_project_warnings(${PROJECT_NAME})
 
 verbose_message("Applied compiler warnings. Using standard ${CMAKE_CXX_STANDARD}.\n")
@@ -175,7 +204,7 @@ verbose_message("Applied compiler warnings. Using standard ${CMAKE_CXX_STANDARD}
 # Enable Doxygen
 #
 
-include(cmake/Doxygen.cmake)
+include(Doxygen)
 
 ##################################################################################
 ##################################################################################
@@ -324,18 +353,18 @@ install(
 # Add version header
 #
 
-configure_file(
-  ${CMAKE_CURRENT_LIST_DIR}/cmake/version.hpp.in
-  include/${PROJECT_NAME_LOWERCASE}/version.hpp
-  @ONLY
-)
-
-install(
-  FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME_LOWERCASE}/version.hpp
-  DESTINATION
-  include/${PROJECT_NAME_LOWERCASE}
-)
+#configure_file(
+#  ${CMAKE_CURRENT_LIST_DIR}/cmake/version.hpp.in
+#  include/${PROJECT_NAME_LOWERCASE}/version.hpp
+#  @ONLY
+#)
+#
+#install(
+#  FILES
+#  ${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME_LOWERCASE}/version.hpp
+#  DESTINATION
+#  include/${PROJECT_NAME_LOWERCASE}
+#)
 
 ##################################################################################
 ##################################################################################
@@ -360,29 +389,29 @@ verbose_message("Install targets successfully built. Install with `cmake --build
 # Quick `ConfigVersion.cmake` creation
 #
 
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-  ${PROJECT_NAME}ConfigVersion.cmake
-  VERSION
-  ${PROJECT_VERSION}
-  COMPATIBILITY
-  SameMajorVersion
-)
+#include(CMakePackageConfigHelpers)
+#write_basic_package_version_file(
+#  ${PROJECT_NAME}ConfigVersion.cmake
+#  VERSION
+#  ${PROJECT_VERSION}
+#  COMPATIBILITY
+#  SameMajorVersion
+#)
 
-configure_package_config_file(
-  ${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-  INSTALL_DESTINATION
-  ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-)
-
-install(
-  FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-  DESTINATION
-  ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-)
+#configure_package_config_file(
+#  ${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+#  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+#  INSTALL_DESTINATION
+#  ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+#)
+#
+#install(
+#  FILES
+#  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+#  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+#  DESTINATION
+#  ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+#)
 
 ##################################################################################
 ##################################################################################

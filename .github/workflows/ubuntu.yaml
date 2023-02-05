@@ -51,20 +51,6 @@ jobs:
       - name: Build
         run: cmake --build build --target ${{ matrix.target }}
 
-  ci_static_analysis_ubuntu:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target: [ci_cpplint, ci_reproducible_tests]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Get latest CMake and ninja
-        uses: lukka/get-cmake@latest
-      - name: Run CMake
-        run: cmake -S . -B build -CI=On
-      - name: Build
-        run: cmake --build build --target ${{ matrix.target }}
-
   ci_static_analysis_clang:
     runs-on: ubuntu-latest
     container: silkeh/clang:dev

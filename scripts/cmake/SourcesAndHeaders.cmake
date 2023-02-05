@@ -1,17 +1,14 @@
 set(sources
-    src/tmp.cpp
+    src/main.cpp
 )
 
 set(exe_sources
-		src/main.cpp
 		${sources}
 )
 
 set(headers
-    include/project/tmp.hpp
-    include/project/vector.hpp
+    include/project/darray.h
 )
 
 set(test_sources
-  src/tmp_test.cpp
 )
