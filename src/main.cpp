@@ -1,16 +1,10 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include<tuple>
-#include<vector>
-#include <random>
-#include <string.h>
-#include <unistd.h>
-#include <type_traits>
+#include <project/darray.h>
 
 
 int main(int argc, char const *argv[])
 {
+    zxx::core::container::darray<int> arr;
 
     return 0;
 }
