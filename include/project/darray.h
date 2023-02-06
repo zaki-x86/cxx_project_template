@@ -12,7 +12,20 @@
 
 #define _DARRAY_H_
 
-#include "darray.api.hpp"
-#include "darray.imp.cc"
+template<typename Type>
+struct store
+{
+    Type data;
+
+    store() = default;
+
+    store( Type _data ) : data(_data) {}
+
+    Type fetch_data()
+    {
+        return data;
+    }
+};
+
 
 #endif // !_DARRAY_H_
