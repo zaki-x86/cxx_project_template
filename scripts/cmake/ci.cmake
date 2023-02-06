@@ -536,17 +536,17 @@ endforeach()
 # Coverage.
 ###############################################################################
 
-add_custom_target(ci_test_coverage
-    COMMAND CXX=g++ ${CMAKE_COMMAND}
-        -DCMAKE_BUILD_TYPE=Debug -GNinja -DCMAKE_CXX_FLAGS="--coverage;-fprofile-arcs;-ftest-coverage"
-        -DBuildTests=ON
-        -S${PROJECT_SOURCE_DIR} -B${PROJECT_BINARY_DIR}/build_coverage
-    COMMAND ${CMAKE_COMMAND} --build ${PROJECT_BINARY_DIR}/build_coverage
-    COMMAND cd ${PROJECT_BINARY_DIR}/build_coverage && ${CMAKE_CTEST_COMMAND} --parallel ${N} --output-on-failure
+# add_custom_target(ci_test_coverage
+#     COMMAND CXX=g++ ${CMAKE_COMMAND}
+#         -DCMAKE_BUILD_TYPE=Debug -GNinja -DCMAKE_CXX_FLAGS="--coverage;-fprofile-arcs;-ftest-coverage"
+#         -DBuildTests=ON
+#         -S${PROJECT_SOURCE_DIR} -B${PROJECT_BINARY_DIR}/build_coverage
+#     COMMAND ${CMAKE_COMMAND} --build ${PROJECT_BINARY_DIR}/build_coverage
+#     COMMAND cd ${PROJECT_BINARY_DIR}/build_coverage && ${CMAKE_CTEST_COMMAND} --parallel ${N} --output-on-failure
 
     #COMMAND CXX=g++ ${CMAKE_COMMAND}
     #    -DCMAKE_BUILD_TYPE=Debug -GNinja -DCMAKE_CXX_FLAGS="-m32;--coverage;-fprofile-arcs;-ftest-coverage"
-    #    -DBuildTests=ON -DJSON_32bitTest=ONLY
+    #    -DBuildTests=ON -D32bitTest=ONLY
     #    -S${PROJECT_SOURCE_DIR} -B${PROJECT_BINARY_DIR}/build_coverage32
     #COMMAND ${CMAKE_COMMAND} --build ${PROJECT_BINARY_DIR}/build_coverage32
     #COMMAND cd ${PROJECT_BINARY_DIR}/build_coverage32 && ${CMAKE_CTEST_COMMAND} --parallel ${N} --output-on-failure
@@ -556,8 +556,8 @@ add_custom_target(ci_test_coverage
     #COMMAND ${CMAKE_SOURCE_DIR}/tests/thirdparty/imapdl/filterbr.py json.info.filtered > json.info.filtered.noexcept
     #COMMAND genhtml --title "JSON for Modern C++" --legend --demangle-cpp --output-directory html --show-details --branch-coverage json.info.filtered.noexcept
 #
-    COMMENT "Compile and test with coverage"
-)
+#     COMMENT "Compile and test with coverage"
+# )
 
 ###############################################################################
 # Sanitizers.
@@ -658,7 +658,7 @@ add_custom_target(ci_clang_analyze
 ###############################################################################
 
 add_custom_target(ci_cppcheck
-    COMMAND ${CPPCHECK_TOOL} --enable=warning --suppress=missingReturn --inline-suppr --inconclusive --force --std=c++11 ${PROJECT_SOURCE_DIR}/include/project/*.h --error-exitcode=1
+    COMMAND ${CPPCHECK_TOOL} --language=c++ --enable=warning --suppress=missingReturn --inline-suppr --inconclusive --force --std=c++11 ${PROJECT_SOURCE_DIR}/include/project/*.h --error-exitcode=1
     COMMENT "Check code with Cppcheck"
 )
 

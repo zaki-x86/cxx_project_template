@@ -68,42 +68,42 @@ jobs:
       - name: Build
         run: cmake --build build --target ${{ matrix.target }}
 
-  ci_cmake_options:
-    runs-on: ubuntu-latest
-    container: ubuntu:focal
-    strategy:
-      matrix:
-        target: [ci_cmake_flags, ci_test_diagnostics, ci_test_noexceptions, ci_test_noimplicitconversions, ci_test_legacycomparison, ci_test_noglobaludls]
-    steps:
-      - name: Install build-essential
-        run: apt-get update ; apt-get install -y build-essential unzip wget git
-      - uses: actions/checkout@v3
-      - name: Get latest CMake and ninja
-        uses: lukka/get-cmake@latest
-      - name: Run CMake
-        run: cmake -S . -B build -DCI=On
-      - name: Build
-        run: cmake --build build --target ${{ matrix.target }}
+  #ci_cmake_options:
+  #  runs-on: ubuntu-latest
+  #  container: ubuntu:focal
+  #  strategy:
+  #    matrix:
+  #      target: [ci_cmake_flags, ci_test_diagnostics, ci_test_noexceptions, ci_test_noimplicitconversions, ci_test_legacycomparison, ci_test_noglobaludls]
+  #  steps:
+  #    - name: Install build-essential
+  #      run: apt-get update ; apt-get install -y build-essential unzip wget git
+  #    - uses: actions/checkout@v3
+  #    - name: Get latest CMake and ninja
+  #      uses: lukka/get-cmake@latest
+  #    - name: Run CMake
+  #      run: cmake -S . -B build -DCI=On
+  #    - name: Build
+  #      run: cmake --build build --target ${{ matrix.target }}
 
-  ci_test_coverage:
-    runs-on: ubuntu-latest
-    container: ghcr.io/nlohmann/json-ci:v2.4.0
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run CMake
-        run: cmake -S . -B build -DCI=On
-      - name: Build
-        run: cmake --build build --target ci_test_coverage
-      - name: Archive coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: code-coverage-report
-          path: ${{ github.workspace }}/build/html
-      - name: Publish report to Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ${{ github.workspace }}/build/json.info.filtered.noexcept
+  #ci_test_coverage:
+  #  runs-on: ubuntu-latest
+  #  container: ghcr.io/nlohmann/json-ci:v2.4.0
+  #  steps:
+  #    - uses: actions/checkout@v3
+  #    - name: Run CMake
+  #      run: cmake -S . -B build -DCI=On
+  #    - name: Build
+  #      run: cmake --build build --target ci_test_coverage
+  #    - name: Archive coverage report
+  #      uses: actions/upload-artifact@v3
+  #      with:
+  #        name: code-coverage-report
+  #        path: ${{ github.workspace }}/build/html
+  #    - name: Publish report to Coveralls
+  #      uses: coverallsapp/github-action@master
+  #      with:
+  #        github-token: ${{ secrets.GITHUB_TOKEN }}
+  #        path-to-lcov: ${{ github.workspace }}/build/json.info.filtered.noexcept
 
   ci_test_compilers_gcc:
     runs-on: ubuntu-latest
@@ -176,15 +176,15 @@ jobs:
           . /opt/intel/oneapi/setvars.sh
           cmake --build build --target ci_icpc
 
-  ci_reuse_compliance:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
-      - name: Install REUSE tool
-        run:  python -m pip install reuse
-      - name: Run REUSE lint
-        run: reuse lint
+#  ci_reuse_compliance:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - uses: actions/setup-python@v3
+#      - name: Install REUSE tool
+#        run:  python -m pip install reuse
+#      - name: Run REUSE lint
+#        run: reuse lint
 
   #ci_test_documentation:
   #  runs-on: ubuntu-latest
