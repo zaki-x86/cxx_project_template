@@ -64,7 +64,7 @@ jobs:
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
       - name: Run CMake
-        run: cmake -S . -B build -CI=On
+        run: cmake -S . -B build -DCI=On
       - name: Build
         run: cmake --build build --target ${{ matrix.target }}
 
@@ -81,7 +81,7 @@ jobs:
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
       - name: Run CMake
-        run: cmake -S . -B build -CI=On
+        run: cmake -S . -B build -DCI=On
       - name: Build
         run: cmake --build build --target ${{ matrix.target }}
 
@@ -91,7 +91,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run CMake
-        run: cmake -S . -B build -CI=On
+        run: cmake -S . -B build -DCI=On
       - name: Build
         run: cmake --build build --target ci_test_coverage
       - name: Archive coverage report
@@ -116,7 +116,7 @@ jobs:
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
       - name: Run CMake
-        run: cmake -S . -B build -CI=On
+        run: cmake -S . -B build -DCI=On
       - name: Build
         run: cmake --build build --target ci_test_compiler_default
 
@@ -133,7 +133,7 @@ jobs:
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
       - name: Run CMake
-        run: cmake -S . -B build -CI=On
+        run: cmake -S . -B build -DCI=On
       - name: Build
         run: cmake --build build --target ci_test_compiler_default
 
@@ -146,7 +146,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run CMake
-        run: cmake -S . -B build -CI=On
+        run: cmake -S . -B build -DCI=On
       - name: Build
         run: cmake --build build --target ci_test_compiler_${{ matrix.compiler }}
 
@@ -160,7 +160,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run CMake
-        run: cmake -S . -B build -CI=On
+        run: cmake -S . -B build -DCI=On
       - name: Build
         run: cmake --build build --target ci_test_${{ matrix.compiler }}_cxx${{ matrix.standard }}
 
@@ -170,7 +170,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run CMake
-        run: cmake -S . -B build -CI=On
+        run: cmake -S . -B build -DCI=On
       - name: Build
         run: |
           . /opt/intel/oneapi/setvars.sh
@@ -194,6 +194,6 @@ jobs:
   #  steps:
   #    - uses: actions/checkout@v3
   #    - name: Run CMake
-  #      run: cmake -S . -B build -CI=On
+  #      run: cmake -S . -B build -DCI=On
   #    - name: Build
   #      run: cmake --build build --target ${{ matrix.target }}
