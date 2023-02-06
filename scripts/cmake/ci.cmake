@@ -658,7 +658,7 @@ add_custom_target(ci_clang_analyze
 ###############################################################################
 
 add_custom_target(ci_cppcheck
-    COMMAND ${CPPCHECK_TOOL} --enable=warning --suppress=missingReturn --inline-suppr --inconclusive --force --std=c++11 ${PROJECT_SOURCE_DIR}/include/project/*.hpp --error-exitcode=1
+    COMMAND ${CPPCHECK_TOOL} --enable=warning --suppress=missingReturn --inline-suppr --inconclusive --force --std=c++11 ${PROJECT_SOURCE_DIR}/include/project/*.h --error-exitcode=1
     COMMENT "Check code with Cppcheck"
 )
 
@@ -716,21 +716,6 @@ add_custom_target(ci_infer
     COMMENT "Check code with Infer"
 )
 
-###############################################################################
-# Run test suite with previously downloaded test data.
-###############################################################################
-
-add_custom_target(ci_offline_testdata
-    COMMAND mkdir -p ${PROJECT_BINARY_DIR}/build_offline_testdata/test_data
-    COMMAND cd ${PROJECT_BINARY_DIR}/build_offline_testdata/test_data && ${GIT_TOOL} clone -c advice.detachedHead=false --branch v3.1.0 https://github.com/nlohmann/json_test_data.git --quiet --depth 1
-    COMMAND ${CMAKE_COMMAND}
-        -DCMAKE_BUILD_TYPE=Debug -GNinja
-        -DBuildTests=ON  -DJSON_TestDataDirectory=${PROJECT_BINARY_DIR}/build_offline_testdata/test_data/json_test_data
-        -S${PROJECT_SOURCE_DIR} -B${PROJECT_BINARY_DIR}/build_offline_testdata
-    COMMAND ${CMAKE_COMMAND} --build ${PROJECT_BINARY_DIR}/build_offline_testdata
-    COMMAND cd ${PROJECT_BINARY_DIR}/build_offline_testdata && ${CMAKE_CTEST_COMMAND} --parallel ${N} --output-on-failure
-    COMMENT "Check code with previously downloaded test data"
-)
 
 ###############################################################################
 # Run test suite when project was not checked out from Git
@@ -796,77 +781,77 @@ add_custom_target(ci_single_binaries
 # Benchmarks
 ###############################################################################
 
-add_custom_target(ci_benchmarks
-    COMMAND ${CMAKE_COMMAND}
-        -DCMAKE_BUILD_TYPE=Release -GNinja
-        -S${PROJECT_SOURCE_DIR}/benchmarks -B${PROJECT_BINARY_DIR}/build_benchmarks
-    COMMAND ${CMAKE_COMMAND} --build ${PROJECT_BINARY_DIR}/build_benchmarks --target json_benchmarks
-    COMMAND cd ${PROJECT_BINARY_DIR}/build_benchmarks && ./json_benchmarks
-    COMMENT "Run benchmarks"
-)
-
+#add_custom_target(ci_benchmarks
+#    COMMAND ${CMAKE_COMMAND}
+#        -DCMAKE_BUILD_TYPE=Release -GNinja
+#        -S${PROJECT_SOURCE_DIR}/benchmarks -B${PROJECT_BINARY_DIR}/build_benchmarks
+#    COMMAND ${CMAKE_COMMAND} --build ${PROJECT_BINARY_DIR}/build_benchmarks --target json_benchmarks
+#    COMMAND cd ${PROJECT_BINARY_DIR}/build_benchmarks && ./json_benchmarks
+#    COMMENT "Run benchmarks"
+#)
+#
 ###############################################################################
 # CMake flags
 ###############################################################################
 
-function(ci_get_cmake version var)
-    set(${var} ${PROJECT_BINARY_DIR}/cmake-${version}/bin/cmake)
-    add_custom_command(
-        OUTPUT ${${var}}
-        COMMAND wget -nc https://github.com/Kitware/CMake/releases/download/v${version}/cmake-${version}.tar.gz
-        COMMAND tar xfz cmake-${version}.tar.gz
-        COMMAND rm cmake-${version}.tar.gz
-        COMMAND ${CMAKE_COMMAND} -S cmake-${version} -B cmake-${version}
-        COMMAND ${CMAKE_COMMAND} --build cmake-${version} --parallel 10
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-        COMMENT "Download CMake ${version}"
-    )
-    set(${var} ${${var}} PARENT_SCOPE)
-endfunction()
+# function(ci_get_cmake version var)
+#     set(${var} ${PROJECT_BINARY_DIR}/cmake-${version}/bin/cmake)
+#     add_custom_command(
+#         OUTPUT ${${var}}
+#         COMMAND wget -nc https://github.com/Kitware/CMake/releases/download/v${version}/cmake-${version}.tar.gz
+#         COMMAND tar xfz cmake-${version}.tar.gz
+#         COMMAND rm cmake-${version}.tar.gz
+#         COMMAND ${CMAKE_COMMAND} -S cmake-${version} -B cmake-${version}
+#         COMMAND ${CMAKE_COMMAND} --build cmake-${version} --parallel 10
+#         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+#         COMMENT "Download CMake ${version}"
+#     )
+#     set(${var} ${${var}} PARENT_SCOPE)
+# endfunction()
 
-ci_get_cmake(3.1.0 CMAKE_3_1_0_BINARY)
-ci_get_cmake(3.13.0 CMAKE_3_13_0_BINARY)
+# ci_get_cmake(3.1.0 CMAKE_3_1_0_BINARY)
+# ci_get_cmake(3.13.0 CMAKE_3_13_0_BINARY)
 
-set(JSON_CMAKE_FLAGS_3_1_0 JSON_Diagnostics JSON_GlobalUDLs JSON_ImplicitConversions JSON_DisableEnumSerialization
-    JSON_LegacyDiscardedValueComparison JSON_Install JSON_MultipleHeaders JSON_SystemInclude JSON_Valgrind)
-set(JSON_CMAKE_FLAGS_3_13_0 JSON_BuildTests)
+# set(JSON_CMAKE_FLAGS_3_1_0 JSON_Diagnostics JSON_GlobalUDLs JSON_ImplicitConversions JSON_DisableEnumSerialization
+#     JSON_LegacyDiscardedValueComparison JSON_Install JSON_MultipleHeaders JSON_SystemInclude JSON_Valgrind)
+# set(JSON_CMAKE_FLAGS_3_13_0 JSON_BuildTests)
 
-function(ci_add_cmake_flags_targets flag min_version)
-    string(TOLOWER "ci_cmake_flag_${flag}" flag_target)
-    string(REPLACE . _ min_version_var ${min_version})
-    set(cmake_binary ${CMAKE_${min_version_var}_BINARY})
-    add_custom_target(${flag_target}
-        COMMENT "Check CMake flag ${flag} (CMake ${CMAKE_VERSION})"
-        COMMAND ${CMAKE_COMMAND}
-            -Werror=dev
-            -D${flag}=ON
-            -S${PROJECT_SOURCE_DIR} -B${PROJECT_BINARY_DIR}/build_${flag_target}
-    )
-    add_custom_target(${flag_target}_${min_version_var}
-        COMMENT "Check CMake flag ${JSON_CMAKE_FLAG} (CMake ${min_version})"
-        COMMAND mkdir -pv ${PROJECT_BINARY_DIR}/build_${flag_target}_${min_version_var}
-        COMMAND cd ${PROJECT_BINARY_DIR}/build_${flag_target}_${min_version_var}
-            && ${cmake_binary} -Werror=dev ${PROJECT_SOURCE_DIR} -D${flag}=ON
-        DEPENDS ${cmake_binary}
-    )
-    list(APPEND JSON_CMAKE_FLAG_TARGETS ${JSON_CMAKE_FLAG_TARGET} ${flag_target}_${min_version_var})
-    list(APPEND JSON_CMAKE_FLAG_BUILD_DIRS ${PROJECT_BINARY_DIR}/build_${flag_target} ${PROJECT_BINARY_DIR}/build_${flag_target}_${min_version_var})
-    set(JSON_CMAKE_FLAG_TARGETS ${JSON_CMAKE_FLAG_TARGETS} PARENT_SCOPE)
-    set(JSON_CMAKE_FLAG_BUILD_DIRS ${JSON_CMAKE_FLAG_BUILD_DIRS} PARENT_SCOPE)
-endfunction()
+# function(ci_add_cmake_flags_targets flag min_version)
+#     string(TOLOWER "ci_cmake_flag_${flag}" flag_target)
+#     string(REPLACE . _ min_version_var ${min_version})
+#     set(cmake_binary ${CMAKE_${min_version_var}_BINARY})
+#     add_custom_target(${flag_target}
+#         COMMENT "Check CMake flag ${flag} (CMake ${CMAKE_VERSION})"
+#         COMMAND ${CMAKE_COMMAND}
+#             -Werror=dev
+#             -D${flag}=ON
+#             -S${PROJECT_SOURCE_DIR} -B${PROJECT_BINARY_DIR}/build_${flag_target}
+#     )
+#     add_custom_target(${flag_target}_${min_version_var}
+#         COMMENT "Check CMake flag ${JSON_CMAKE_FLAG} (CMake ${min_version})"
+#         COMMAND mkdir -pv ${PROJECT_BINARY_DIR}/build_${flag_target}_${min_version_var}
+#         COMMAND cd ${PROJECT_BINARY_DIR}/build_${flag_target}_${min_version_var}
+#             && ${cmake_binary} -Werror=dev ${PROJECT_SOURCE_DIR} -D${flag}=ON
+#         DEPENDS ${cmake_binary}
+#     )
+#     list(APPEND JSON_CMAKE_FLAG_TARGETS ${JSON_CMAKE_FLAG_TARGET} ${flag_target}_${min_version_var})
+#     list(APPEND JSON_CMAKE_FLAG_BUILD_DIRS ${PROJECT_BINARY_DIR}/build_${flag_target} ${PROJECT_BINARY_DIR}/build_${flag_target}_${min_version_var})
+#     set(JSON_CMAKE_FLAG_TARGETS ${JSON_CMAKE_FLAG_TARGETS} PARENT_SCOPE)
+#     set(JSON_CMAKE_FLAG_BUILD_DIRS ${JSON_CMAKE_FLAG_BUILD_DIRS} PARENT_SCOPE)
+# endfunction()
 
-foreach(JSON_CMAKE_FLAG ${JSON_CMAKE_FLAGS_3_1_0})
-    ci_add_cmake_flags_targets(${JSON_CMAKE_FLAG} 3.1.0)
-endforeach()
+# foreach(JSON_CMAKE_FLAG ${JSON_CMAKE_FLAGS_3_1_0})
+#     ci_add_cmake_flags_targets(${JSON_CMAKE_FLAG} 3.1.0)
+# endforeach()
 
-foreach(JSON_CMAKE_FLAG ${JSON_CMAKE_FLAGS_3_13_0})
-    ci_add_cmake_flags_targets(${JSON_CMAKE_FLAG} 3.13.0)
-endforeach()
+# foreach(JSON_CMAKE_FLAG ${JSON_CMAKE_FLAGS_3_13_0})
+#     ci_add_cmake_flags_targets(${JSON_CMAKE_FLAG} 3.13.0)
+# endforeach()
 
-add_custom_target(ci_cmake_flags
-    DEPENDS ${JSON_CMAKE_FLAG_TARGETS}
-    COMMENT "Check CMake flags"
-)
+# add_custom_target(ci_cmake_flags
+#     DEPENDS ${JSON_CMAKE_FLAG_TARGETS}
+#     COMMENT "Check CMake flags"
+# )
 
 ###############################################################################
 # Use more installed compilers.
@@ -906,13 +891,13 @@ add_custom_target(ci_test_compiler_default
 # CUDA example
 ###############################################################################
 
-add_custom_target(ci_cuda_example
-    COMMAND ${CMAKE_COMMAND}
-        -DCMAKE_BUILD_TYPE=Debug -GNinja
-        -DCMAKE_CUDA_HOST_COMPILER=g++-8
-        -S${PROJECT_SOURCE_DIR}/tests/cuda_example -B${PROJECT_BINARY_DIR}/build_cuda_example
-    COMMAND ${CMAKE_COMMAND} --build ${PROJECT_BINARY_DIR}/build_cuda_example
-)
+#add_custom_target(ci_cuda_example
+#    COMMAND ${CMAKE_COMMAND}
+#        -DCMAKE_BUILD_TYPE=Debug -GNinja
+#        -DCMAKE_CUDA_HOST_COMPILER=g++-8
+#        -S${PROJECT_SOURCE_DIR}/tests/cuda_example -B${PROJECT_BINARY_DIR}/build_cuda_example
+#    COMMAND ${CMAKE_COMMAND} --build ${PROJECT_BINARY_DIR}/build_cuda_example
+#)
 
 ###############################################################################
 # Intel C++ Compiler
